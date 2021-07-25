@@ -5,3 +5,12 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+(1..10).each do |i|
+  user = User.create(name: "user#{i}")
+  (1..i).each do |days|
+    user.sleeps.create(
+      start_at: Time.now.advance(days: -days, hours: -8),
+      end_at: Time.now.advance(days: -days)
+    )
+  end
+end
