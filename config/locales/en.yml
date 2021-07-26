@@ -38,3 +38,14 @@ en:
           attributes:
             end_at:
               end_at_must_be_after_start_at: "must be after the start at"
+  active_interaction:
+    errors:
+      models:
+        users/sleep:
+          attributes:
+            user:
+              is_sleeping: "is already asleep"
+        users/wake_up:
+          attributes:
+            user:
+              is_awake: "is already awake"

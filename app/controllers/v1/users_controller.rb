@@ -1,12 +1,38 @@
 # frozen_string_literal: true
 
 module V1
-  class SleepsController < ApplicationController
+  class UsersController < ApplicationController
     def index
-      @sleeps = if user = User.find_by(id: params[:user_id])
-        Sleep.where(user: user).order(created_at: :desc)
+      # Out of assignment
+    end
+
+    def sleep
+      user = User.find(params[:user_id])
+
+      outcome = Users::Sleep.run(user: user)
+
+      if outcome.valid?
+        head(:ok)
       else
-        Sleep.all.order(created_at: :desc)
+        render(
+          json: { errors: outcome.errors.full_messages },
+          status: :unprocessable_entity
+        )
+      end
+    end
+
+    def wake_up
+      user = User.find(params[:user_id])
+
+      outcome = Users::WakeUp.run(user: user)
+
+      if outcome.valid?
+        head(:ok)
+      else
+        render(
+          json: { errors: outcome.errors.full_messages },
+          status: :unprocessable_entity
+        )
       end
     end
   end
