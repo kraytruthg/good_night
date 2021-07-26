@@ -1,0 +1,78 @@
+require: rubocop-rspec
+require: rubocop-rails
+
+
+# Ignore certain directories.
+AllCops:
+  TargetRubyVersion: 2.6.3
+  Exclude:
+    - vendor/**/*
+    - db/schema.rb
+  DisplayStyleGuide: true
+  DisplayCopNames: true
+
+Rails:
+  Enabled: true
+
+Layout/LeadingCommentSpace:
+  Exclude:
+    # Ignore the Gemfile because of how we specify the gemset.
+    - Gemfile
+
+# Allow assignment in conditionals, for example:
+#   if foo = get_foo
+#   end
+Lint/AssignmentInCondition:
+  Enabled: false
+
+# Allows alignment with variable, for example:
+#  x = if foo
+#  end
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+# Allow no documentation in class headers for now.
+Style/Documentation:
+  Enabled: false
+
+# Allow `raise` to used, otherwise they encourage using `fail`.
+Style/SignalException:
+  Enabled: false
+
+# Allow class definition lines to be as long as they want.
+Metrics/ClassLength:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  Exclude:
+    - config.ru
+    - Rakefile
+    - config/boot.rb
+    - config/application.rb
+    - config/environment.rb
+
+# Allow multi-line if and unless blocks. In some cases it's just nicer.
+# But, you should still one-liners if the if/unless only has 1 condition
+# and the expression is not an assignment.
+Style/IfUnlessModifier:
+  Enabled: false
+
+# Allow multi-line while/until blocks.
+Style/WhileUntilModifier:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: false
+
+# There's a lot of places where we want to rescue the error and do nothing.
+# They mostly pretain to social network connections or external services.
+Lint/SuppressedException:
+  Enabled: false
+
+# This doesn't seem to do much other than simply the declaration of these
+# types of methods. However, it makes it really hard to search for methods
+# because they're not preceeded with `def`. We do use delegate in some
+# places, but let's just leave it to the discretion of the developer.
+Rails/Delegate:
+  Enabled: false

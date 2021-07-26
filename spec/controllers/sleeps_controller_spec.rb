@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe V1::SleepsController do
   describe "GET index" do
-    let!(:sleeps) { 5.times { |i| FactoryBot.create(:sleep) } }
+    let!(:sleeps) { 5.times { |_i| FactoryBot.create(:sleep) } }
 
     it "returns http success" do
       get :index
@@ -13,7 +15,7 @@ RSpec.describe V1::SleepsController do
       get :index
       debugger
       json_response = JSON.parse(response.body)
-      expect(hash_body.keys).to match_array([:id, :ingredients, :instructions])
+      expect(hash_body.keys).to match_array(%i[id ingredients instructions])
     end
   end
 end

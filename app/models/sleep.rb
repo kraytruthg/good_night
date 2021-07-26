@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Sleep < ApplicationRecord
   belongs_to :user
   validates :start_at, presence: true
@@ -9,6 +11,7 @@ class Sleep < ApplicationRecord
 
   def length
     return if in_progress?
+
     end_at - start_at
   end
 

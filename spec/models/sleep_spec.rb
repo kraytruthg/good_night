@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-RSpec.describe 'Sleep' do
+RSpec.describe "Sleep" do
   subject(:sleep) { FactoryBot.create(:sleep) }
 
   it { is_expected.to belong_to :user }
@@ -17,7 +19,7 @@ RSpec.describe 'Sleep' do
 
   describe "#length" do
     it "return the sleep length in seconds" do
-      time = Time.now
+      time = Time.zone.now
       sleep = FactoryBot.create(:sleep, start_at: time.advance(minutes: -1), end_at: time)
 
       expect(sleep.length).to eq(60)

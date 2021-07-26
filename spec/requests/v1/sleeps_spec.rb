@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe V1::SleepsController do
@@ -28,8 +30,8 @@ RSpec.describe V1::SleepsController do
       let(:user) { FactoryBot.create(:user) }
 
       it "returns user's sleep records" do
-        3.times { |i| FactoryBot.create(:sleep, user: user) }
-        2.times { |i| FactoryBot.create(:sleep) }
+        3.times { |_i| FactoryBot.create(:sleep, user: user) }
+        2.times { |_i| FactoryBot.create(:sleep) }
 
         get "/v1/sleeps", params: { user_id: user.id, format: :json }
 
