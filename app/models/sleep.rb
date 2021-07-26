@@ -8,6 +8,7 @@ class Sleep < ApplicationRecord
   end
 
   def length
+    return if in_progress?
     end_at - start_at
   end
 
