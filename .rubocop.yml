@@ -8,6 +8,14 @@ AllCops:
   Exclude:
     - vendor/**/*
     - db/schema.rb
+    - 'Rakefile'
+    - 'bin/bundle'
+    - 'bin/rails'
+    - 'config/application.rb'
+    - 'config/boot.rb'
+    - 'config/environment.rb'
+    - 'config/environments/*'
+    - 'spec/rails_helper.rb'
   DisplayStyleGuide: true
   DisplayCopNames: true
 
@@ -76,3 +84,6 @@ Lint/SuppressedException:
 # places, but let's just leave it to the discretion of the developer.
 Rails/Delegate:
   Enabled: false
+
+Metrics/BlockLength:
+  Max: 500
