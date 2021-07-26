@@ -2,10 +2,12 @@
 
 Rails.application.routes.draw do
   namespace :v1, constraints: { format: "json" } do
-    resources :sleeps, only: [:index]
     resources :users, only: [] do
       post :sleep
       post :wake_up
+
+      resources :sleeps, only: [:index]
+      resources :follows, only: [:create, :destroy]
     end
   end
 end

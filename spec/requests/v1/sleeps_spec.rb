@@ -3,50 +3,37 @@
 require "rails_helper"
 
 RSpec.describe V1::SleepsController do
-  context "GET /sleeps" do
-    it "returns success with all sleep records" do
-      2.times { FactoryBot.create(:sleep) }
+  context "GET /users/:user_id/sleeps" do
+    let(:user) { FactoryBot.create(:user) }
 
-      get "/v1/sleeps", params: { format: :json }
+    it "returns user's sleep records" do
+      2.times { |_i| FactoryBot.create(:sleep, user: user) }
+      2.times { |_i| FactoryBot.create(:sleep) }
+
+      get "/v1/users/#{user.id}/sleeps", params: { format: :json }
 
       expect(response).to have_http_status(:success)
 
       json_response = JSON.parse(response.body)
-      expect(json_response.size).to eq(Sleep.count)
+      expect(json_response.size).to eq(user.sleeps.count)
     end
 
     it "returns records in order" do
-      old_sleep = FactoryBot.create(:sleep)
-      latest_sleep = FactoryBot.create(:sleep)
+      old_sleep = FactoryBot.create(:sleep, user: user)
+      latest_sleep = FactoryBot.create(:sleep, user: user)
 
-      get "/v1/sleeps", params: { format: :json }
+      get "/v1/users/#{user.id}/sleeps", params: { format: :json }
 
       json_response = JSON.parse(response.body)
       ids = json_response.map { |record| record["id"] }
       expect(ids).to eq([latest_sleep.id, old_sleep.id])
     end
 
-    context "when user_id is passed in" do
-      let(:user) { FactoryBot.create(:user) }
-
-      it "returns user's sleep records" do
-        3.times { |_i| FactoryBot.create(:sleep, user: user) }
-        2.times { |_i| FactoryBot.create(:sleep) }
-
-        get "/v1/sleeps", params: { user_id: user.id, format: :json }
-
-        expect(response).to have_http_status(:success)
-
-        json_response = JSON.parse(response.body)
-        expect(json_response.size).to eq(user.sleeps.count)
-      end
-    end
-
     context "when the sleep is finished" do
       it "return sleep records in JSON" do
-        sleep = FactoryBot.create(:sleep)
+        sleep = FactoryBot.create(:sleep, user: user)
 
-        get "/v1/sleeps", params: { format: :json }
+        get "/v1/users/#{user.id}/sleeps", params: { format: :json }
 
         json_response = JSON.parse(response.body)
 
@@ -62,9 +49,9 @@ RSpec.describe V1::SleepsController do
 
     context "when the sleep is in progress" do
       it "return sleep records in JSON" do
-        sleep = FactoryBot.create(:sleep, :in_progress)
+        sleep = FactoryBot.create(:sleep, :in_progress, user: user)
 
-        get "/v1/sleeps", params: { format: :json }
+        get "/v1/users/#{user.id}/sleeps", params: { format: :json }
 
         json_response = JSON.parse(response.body)
 
