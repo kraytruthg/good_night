@@ -2,10 +2,6 @@
 
 module V1
   class UsersController < ApplicationController
-    def index
-      # Out of assignment
-    end
-
     def sleep
       user = User.find(params[:user_id])
 
