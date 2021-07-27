@@ -65,4 +65,44 @@ RSpec.describe V1::SleepsController do
       end
     end
   end
+
+  context "GET /users/:user_id/sleeps/by_friends" do
+    let(:user) { FactoryBot.create(:user) }
+    let!(:friend1) do
+      FactoryBot.create(:user).tap do |friend|
+        FactoryBot.create(:follow, follower: user, followed_user: friend)
+        3.times { FactoryBot.create(:sleep, user: friend) }
+      end
+    end
+    let!(:friend2) do
+      FactoryBot.create(:user).tap do |friend|
+        FactoryBot.create(:follow, follower: user, followed_user: friend)
+        FactoryBot.create(:sleep, user: friend)
+      end
+    end
+
+    it "returns friends sleeps" do
+      get "/v1/users/#{user.id}/sleeps/by_friends", params: { format: :json }
+
+      expect(response).to have_http_status(:success)
+
+      json_response = JSON.parse(response.body)
+      expect(json_response.size).to eq(friend1.sleeps.count + friend2.sleeps.count)
+    end
+
+    describe "records order" do
+      let!(:long_sleep) { FactoryBot.create(:sleep, user: friend1, start_at: 1.day.ago, end_at: Time.zone.now) }
+      let!(:short_sleep) { FactoryBot.create(:sleep, user: friend2, start_at: 1.second.ago, end_at: Time.zone.now) }
+
+      it "by length ASC" do
+        get "/v1/users/#{user.id}/sleeps/by_friends", params: { format: :json }
+
+        expect(response).to have_http_status(:success)
+
+        json_response = JSON.parse(response.body)
+        expect(json_response.first["id"]).to eq(short_sleep.id)
+        expect(json_response.last["id"]).to eq(long_sleep.id)
+      end
+    end
+  end
 end

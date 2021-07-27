@@ -7,7 +7,9 @@ Rails.application.routes.draw do
       post :wake_up
 
       resources :sleeps, only: [:index]
-      resources :follows, only: [:create, :destroy]
+      get "/sleeps/by_friends" => "sleeps#by_friends"
+
+      resources :follows, only: %i[create destroy]
     end
   end
 end
