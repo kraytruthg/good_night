@@ -10,16 +10,14 @@ module V1
 
       if follow.save
         head(:created)
-      else
+      elsif follow.errors.all? { |e| e.type == :taken }
         # escape the errors caused by followed already
-        if follow.errors.all? { |e| e.type == :taken }
-          head(:created)
-        else
-          render(
-            json: { errors: follow.errors.full_messages },
-            status: :unprocessable_entity
-          )
-        end
+        head(:created)
+      else
+        render(
+          json: { errors: follow.errors.full_messages },
+          status: :unprocessable_entity
+        )
       end
     end
 

@@ -10,9 +10,9 @@ RSpec.describe Users::WakeUp do
 
   describe ".run" do
     it "update the last sleep record" do
-      expect {
+      expect do
         outcome
-      }.to change {
+      end.to change {
         user.last_sleep.reload.end_at
       }.from(nil).to(woke_up_at)
 
