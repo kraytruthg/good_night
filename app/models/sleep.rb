@@ -15,16 +15,6 @@ class Sleep < ApplicationRecord
     end_at - start_at
   end
 
-  def to_builder
-    Jbuilder.new do |sleep|
-      sleep.user user.to_builder
-      sleep.start_at start_at
-      sleep.end_at end_at
-      sleep.created_at created_at
-      sleep.updated_at start_at
-    end
-  end
-
   private
 
   def end_at_is_after_start_at
