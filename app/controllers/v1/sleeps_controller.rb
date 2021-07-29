@@ -3,8 +3,7 @@
 module V1
   class SleepsController < ApplicationController
     def index
-      user = User.find_by(id: params[:user_id])
-      @sleeps = Sleep.where(user: user).order(created_at: :desc)
+      @sleeps = Sleep.where(user_id: params[:user_id]).order(created_at: :desc)
     end
 
     def by_friends
