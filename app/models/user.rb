@@ -10,11 +10,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true
 
-  def last_sleep
-    sleeps.last
-  end
-
   def sleeping?
-    !!last_sleep && last_sleep.in_progress?
+    !!sleeps.last&.in_progress?
   end
 end

@@ -13,7 +13,7 @@ RSpec.describe Users::WakeUp do
       expect do
         outcome
       end.to change {
-        user.last_sleep.reload.end_at
+        user.sleeps.last.reload.end_at
       }.from(nil).to(woke_up_at)
 
       expect(outcome).to be_valid

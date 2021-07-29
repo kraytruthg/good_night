@@ -10,7 +10,7 @@ module Users
     validate :validate_uesr
 
     def execute
-      last_sleep = user.last_sleep
+      last_sleep = user.sleeps.last
       last_sleep.end_at = woke_up_at
 
       unless last_sleep.save

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 if local_assigns[:show_user]
   json.user do
     json.id sleep.user.id
