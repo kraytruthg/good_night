@@ -10,9 +10,9 @@ RSpec.describe Users::WakeUp do
 
   describe ".run" do
     it "update the last sleep record" do
-      expect do
+      expect {
         outcome
-      end.to change {
+      }.to change {
         user.sleeps.last.reload.end_at
       }.from(nil).to(woke_up_at)
 
@@ -24,6 +24,12 @@ RSpec.describe Users::WakeUp do
       let!(:last_sleep) { FactoryBot.create(:sleep, user: user) }
 
       it "returns error" do
+        expect {
+          outcome
+        }.not_to change {
+          user.sleeps.last.reload.end_at
+        }
+
         expect(outcome).to be_invalid
         expect(outcome.errors.full_messages).to include("User is already awake")
       end
