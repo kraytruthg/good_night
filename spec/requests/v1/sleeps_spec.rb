@@ -90,6 +90,23 @@ RSpec.describe V1::SleepsController do
       expect(json_response.size).to eq(friend1.sleeps.count + friend2.sleeps.count)
     end
 
+    it "return sleep records in JSON" do
+      get "/v1/users/#{user.id}/sleeps/by_friends", params: { format: :json }
+
+      json_response = JSON.parse(response.body)
+
+      row = json_response.first
+      sleep = Sleep.find(row["id"])
+
+      expect(row["id"]).to eq(sleep.id)
+      expect(row["length"]).to eq(sleep.length)
+      expect(row["in_progress"]).to eq(sleep.in_progress?)
+      expect(row["start_at"]).to eq(sleep.start_at.utc.as_json)
+      expect(row["end_at"]).to eq(sleep.end_at.utc.as_json)
+      expect(row["user"]["id"]).to eq(sleep.user.id)
+      expect(row["user"]["name"]).to eq(sleep.user.name)
+    end
+
     describe "records order" do
       let!(:long_sleep) { FactoryBot.create(:sleep, user: friend1, start_at: 1.day.ago, end_at: Time.zone.now) }
       let!(:short_sleep) { FactoryBot.create(:sleep, user: friend2, start_at: 1.second.ago, end_at: Time.zone.now) }
