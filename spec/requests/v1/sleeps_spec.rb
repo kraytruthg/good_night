@@ -10,7 +10,7 @@ RSpec.describe V1::SleepsController do
       2.times { |_i| FactoryBot.create(:sleep, user: user) }
       2.times { |_i| FactoryBot.create(:sleep) }
 
-      get "/v1/users/#{user.id}/sleeps", params: { format: :json }
+      get "/v1/users/#{user.id}/sleeps"
 
       expect(response).to have_http_status(:success)
 
@@ -22,7 +22,7 @@ RSpec.describe V1::SleepsController do
       old_sleep = FactoryBot.create(:sleep, user: user)
       latest_sleep = FactoryBot.create(:sleep, user: user)
 
-      get "/v1/users/#{user.id}/sleeps", params: { format: :json }
+      get "/v1/users/#{user.id}/sleeps"
 
       json_response = JSON.parse(response.body)
       ids = json_response.map { |record| record["id"] }
@@ -33,7 +33,7 @@ RSpec.describe V1::SleepsController do
       it "return sleep records in JSON" do
         sleep = FactoryBot.create(:sleep, user: user)
 
-        get "/v1/users/#{user.id}/sleeps", params: { format: :json }
+        get "/v1/users/#{user.id}/sleeps"
 
         json_response = JSON.parse(response.body)
 
@@ -51,7 +51,7 @@ RSpec.describe V1::SleepsController do
       it "return sleep records in JSON" do
         sleep = FactoryBot.create(:sleep, :in_progress, user: user)
 
-        get "/v1/users/#{user.id}/sleeps", params: { format: :json }
+        get "/v1/users/#{user.id}/sleeps"
 
         json_response = JSON.parse(response.body)
 
@@ -82,7 +82,7 @@ RSpec.describe V1::SleepsController do
     end
 
     it "returns friends sleeps" do
-      get "/v1/users/#{user.id}/sleeps/by_friends", params: { format: :json }
+      get "/v1/users/#{user.id}/sleeps/by_friends"
 
       expect(response).to have_http_status(:success)
 
@@ -91,7 +91,7 @@ RSpec.describe V1::SleepsController do
     end
 
     it "return sleep records in JSON" do
-      get "/v1/users/#{user.id}/sleeps/by_friends", params: { format: :json }
+      get "/v1/users/#{user.id}/sleeps/by_friends"
 
       json_response = JSON.parse(response.body)
 
@@ -112,7 +112,7 @@ RSpec.describe V1::SleepsController do
       let!(:short_sleep) { FactoryBot.create(:sleep, user: friend2, start_at: 1.second.ago, end_at: Time.zone.now) }
 
       it "by length ASC" do
-        get "/v1/users/#{user.id}/sleeps/by_friends", params: { format: :json }
+        get "/v1/users/#{user.id}/sleeps/by_friends"
 
         expect(response).to have_http_status(:success)
 

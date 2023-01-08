@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  namespace :v1, constraints: { format: "json" } do
+  namespace :v1, defaults: { format: "json" } do
     resources :users, only: [] do
       post :sleep
       post :wake_up
