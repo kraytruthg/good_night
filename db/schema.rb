@@ -12,9 +12,9 @@
 
 ActiveRecord::Schema.define(version: 2021_07_26_114535) do
 
-  create_table "follows", force: :cascade do |t|
-    t.integer "follower_id"
-    t.integer "followed_user_id"
+  create_table "follows", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "follower_id"
+    t.bigint "followed_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["followed_user_id"], name: "index_follows_on_followed_user_id"
@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(version: 2021_07_26_114535) do
     t.index ["follower_id"], name: "index_follows_on_follower_id"
   end
 
-  create_table "sleeps", force: :cascade do |t|
-    t.integer "user_id", null: false
+  create_table "sleeps", charset: "utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.datetime "start_at", null: false
     t.datetime "end_at"
     t.datetime "created_at", precision: 6, null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2021_07_26_114535) do
     t.index ["user_id"], name: "index_sleeps_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
