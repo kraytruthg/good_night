@@ -70,13 +70,13 @@ RSpec.describe V1::SleepsController do
     let(:user) { FactoryBot.create(:user) }
     let!(:friend1) do
       FactoryBot.create(:user).tap do |friend|
-        FactoryBot.create(:follow, follower: user, followed_user: friend)
+        FactoryBot.create(:follow, follower: user, following: friend)
         3.times { FactoryBot.create(:sleep, user: friend) }
       end
     end
     let!(:friend2) do
       FactoryBot.create(:user).tap do |friend|
-        FactoryBot.create(:follow, follower: user, followed_user: friend)
+        FactoryBot.create(:follow, follower: user, following: friend)
         FactoryBot.create(:sleep, user: friend)
       end
     end

@@ -5,7 +5,7 @@ module V1
     def create
       follow = Follow.new(
         follower_id: params[:user_id],
-        followed_user_id: params[:followed_user_id]
+        following_id: params[:following_id]
       )
 
       if follow.save

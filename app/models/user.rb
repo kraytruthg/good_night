@@ -3,10 +3,10 @@
 class User < ApplicationRecord
   has_many :sleeps, dependent: :destroy
 
-  # returns an array of follows a user gave to someone else
-  has_many :given_follows, foreign_key: :follower_id, class_name: "Follow"
-  # returns an array of other users who the user has followed
-  has_many :followings, through: :given_follows, source: :followed_user
+  has_many :follower_relationships, foreign_key: :following_id, class_name: "Follow"
+  has_many :followers, through: :follower_relationships, source: :follower
+  has_many :following_relationships, foreign_key: :follower_id, class_name: "Follow"
+  has_many :followings, through: :following_relationships, source: :following
 
   validates :name, presence: true
 
