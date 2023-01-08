@@ -10,13 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_08_114003) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_01_08_114003) do
   create_table "follows", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "follower_id"
     t.bigint "following_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["follower_id", "following_id"], name: "index_follows_on_follower_id_and_following_id", unique: true
     t.index ["follower_id"], name: "index_follows_on_follower_id"
     t.index ["following_id"], name: "index_follows_on_following_id"
@@ -24,17 +23,17 @@ ActiveRecord::Schema.define(version: 2023_01_08_114003) do
 
   create_table "sleeps", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.datetime "start_at", null: false
-    t.datetime "end_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "start_at", precision: nil, null: false
+    t.datetime "end_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sleeps_on_user_id"
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|
     t.string "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "follows", "users", column: "follower_id"
