@@ -3,21 +3,16 @@
 module V1
   class FollowsController < ApplicationController
     def create
-      follow = Follow.new(
+      Follow.create!(
         follower: @current_user,
         following_id: params[:following_id]
       )
-
-      if follow.save
-        head(:created)
-      elsif follow.errors.all? { |e| e.type == :taken }
-        # escape the errors caused by followed already
+      head(:created)
+    rescue ActiveRecord::RecordInvalid => e
+      if e.record.errors.all? { _1.type == :taken }
         head(:created)
       else
-        render(
-          json: { errors: follow.errors.full_messages },
-          status: :unprocessable_entity
-        )
+        super
       end
     end
 

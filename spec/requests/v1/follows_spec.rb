@@ -16,10 +16,10 @@ RSpec.describe V1::FollowsController do
     context "when user is not exist" do
       let(:not_existed_user_id) { 0 }
 
-      it "returns 422" do
+      it "returns 404" do
         post "/v1/users/#{not_existed_user_id}/follows", params: { following_id: following.id }
 
-        expect(response).to have_http_status(422)
+        expect(response).to have_http_status(404)
 
         json_response = JSON.parse(response.body)
         expect(json_response["errors"]).to be_present
