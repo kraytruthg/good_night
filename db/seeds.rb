@@ -7,12 +7,15 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-(1..10).each do |i|
+follower = User.find_by(name: "follower")
+(1..200).each do |i|
   user = User.create(name: "user#{i}")
-  (1..i).each do |days|
+  Follow.create(follower: follower, following_id: user.id)
+
+  (1..10).each do |days|
     user.sleeps.create(
-      start_at: Time.zone.now.advance(days: -days, hours: -8),
-      end_at: Time.zone.now.advance(days: -days)
+      start_at: Time.zone.now.advance(days: -1 * days, hours: -1 * rand(1..12)),
+      end_at: Time.zone.now.advance(days: -1 * days)
     )
   end
 end

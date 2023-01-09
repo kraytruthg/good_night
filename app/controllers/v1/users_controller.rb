@@ -3,9 +3,7 @@
 module V1
   class UsersController < ApplicationController
     def sleep
-      user = User.find(params[:user_id])
-
-      outcome = Users::Sleep.run(user: user)
+      outcome = Users::Sleep.run(user: @current_user)
 
       if outcome.valid?
         head(:ok)
@@ -18,9 +16,7 @@ module V1
     end
 
     def wake_up
-      user = User.find(params[:user_id])
-
-      outcome = Users::WakeUp.run(user: user)
+      outcome = Users::WakeUp.run(user: @current_user)
 
       if outcome.valid?
         head(:ok)

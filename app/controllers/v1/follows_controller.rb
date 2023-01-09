@@ -4,7 +4,7 @@ module V1
   class FollowsController < ApplicationController
     def create
       follow = Follow.new(
-        follower_id: params[:user_id],
+        follower: @current_user,
         following_id: params[:following_id]
       )
 
