@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_08_120356) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_08_170218) do
   create_table "follows", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "follower_id"
     t.bigint "following_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["follower_id", "following_id"], name: "index_follows_on_follower_id_and_following_id", unique: true
-    t.index ["follower_id"], name: "index_follows_on_follower_id"
     t.index ["following_id"], name: "index_follows_on_following_id"
   end
 
@@ -37,6 +36,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_08_120356) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "follows", "users", column: "follower_id"
-  add_foreign_key "follows", "users", column: "following_id"
 end
