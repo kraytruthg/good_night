@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :sleep do
     user
-    start_at { Time.now }
+    start_at { 1.minutes.ago }
     end_at { start_at.advance(hours: 8) }
 
     trait :in_progress do
