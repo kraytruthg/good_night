@@ -18,11 +18,13 @@ RSpec.describe "Sleep" do
   end
 
   describe "#length" do
-    it "return the sleep length in seconds" do
-      time = Time.zone.now
-      sleep = FactoryBot.create(:sleep, start_at: time.advance(minutes: -1), end_at: time)
-
-      expect(sleep.length).to eq(60)
+    context "when sleep is finished" do
+      it "return the sleep length in seconds" do
+        time = Time.zone.now
+        sleep = FactoryBot.create(:sleep, start_at: time.advance(minutes: -1), end_at: time)
+        
+        expect(sleep.length).to eq(60)
+      end
     end
 
     context "when sleep in progress" do

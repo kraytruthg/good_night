@@ -7,8 +7,8 @@ RSpec.describe V1::SleepsController do
     let(:user) { FactoryBot.create(:user) }
 
     it "returns user's sleep records" do
-      2.times { |_i| FactoryBot.create(:sleep, user: user) }
-      2.times { |_i| FactoryBot.create(:sleep) }
+       FactoryBot.create(:sleep, user: user) 
+       FactoryBot.create(:sleep) 
 
       get "/v1/users/#{user.id}/sleeps"
 
@@ -20,7 +20,7 @@ RSpec.describe V1::SleepsController do
 
     it "returns records in order" do
       old_sleep = FactoryBot.create(:sleep, user: user)
-      latest_sleep = FactoryBot.create(:sleep, user: user)
+      latest_sleep = FactoryBot.create(:sleep, user: user, start_at: Time.now + 1)
 
       get "/v1/users/#{user.id}/sleeps"
 
@@ -37,13 +37,13 @@ RSpec.describe V1::SleepsController do
 
         json_response = JSON.parse(response.body)
 
-        row = json_response.first
-
-        expect(row["id"]).to eq(sleep.id)
-        expect(row["length"]).to eq(sleep.length)
-        expect(row["in_progress"]).to eq(sleep.in_progress?)
-        expect(row["start_at"]).to eq(sleep.start_at.utc.as_json)
-        expect(row["end_at"]).to eq(sleep.end_at.utc.as_json)
+        expect(json_response[0]).to match({
+          "id"          => sleep.id,
+          "length"      => sleep.length,
+          "in_progress" => sleep.in_progress?,
+          "start_at"    => sleep.start_at.utc.as_json,
+          "end_at"      => sleep.end_at.utc.as_json,
+        })
       end
     end
 
@@ -55,29 +55,29 @@ RSpec.describe V1::SleepsController do
 
         json_response = JSON.parse(response.body)
 
-        row = json_response.first
-
-        expect(row["id"]).to eq(sleep.id)
-        expect(row["length"]).to eq(nil)
-        expect(row["in_progress"]).to eq(sleep.in_progress?)
-        expect(row["start_at"]).to eq(sleep.start_at.utc.as_json)
-        expect(row["end_at"]).to eq(nil)
+        expect(json_response[0]).to match({
+          "id"          => sleep.id,
+          "length"      => sleep.length,
+          "in_progress" => sleep.in_progress?,
+          "start_at"    => sleep.start_at.utc.as_json,
+          "end_at"      => nil
+        })
       end
     end
   end
 
   context "GET /users/:user_id/sleeps/by_friends" do
     let(:user) { FactoryBot.create(:user) }
-    let!(:friend1) do
-      FactoryBot.create(:user).tap do |friend|
-        FactoryBot.create(:follow, follower: user, following: friend)
-        3.times { FactoryBot.create(:sleep, user: friend) }
+    let!(:following) do
+      FactoryBot.create(:user).tap do |following|
+        FactoryBot.create(:follow, follower: user, following: following)
+        FactoryBot.create(:sleep, user: following, start_at: 1.days.ago)
       end
     end
-    let!(:friend2) do
-      FactoryBot.create(:user).tap do |friend|
-        FactoryBot.create(:follow, follower: user, following: friend)
-        FactoryBot.create(:sleep, user: friend)
+    let!(:follower) do
+      FactoryBot.create(:user).tap do |follower|
+        FactoryBot.create(:follow, follower: follower, following: user)
+        FactoryBot.create(:sleep, user: follower)
       end
     end
 
@@ -87,7 +87,7 @@ RSpec.describe V1::SleepsController do
       expect(response).to have_http_status(:success)
 
       json_response = JSON.parse(response.body)
-      expect(json_response.size).to eq(friend1.sleeps.count + friend2.sleeps.count)
+      expect(json_response.size).to eq(following.sleeps.count)
     end
 
     it "return sleep records in JSON" do
@@ -98,27 +98,32 @@ RSpec.describe V1::SleepsController do
       row = json_response.first
       sleep = Sleep.find(row["id"])
 
-      expect(row["id"]).to eq(sleep.id)
-      expect(row["length"]).to eq(sleep.length)
-      expect(row["in_progress"]).to eq(sleep.in_progress?)
-      expect(row["start_at"]).to eq(sleep.start_at.utc.as_json)
-      expect(row["end_at"]).to eq(sleep.end_at.utc.as_json)
-      expect(row["user"]["id"]).to eq(sleep.user.id)
-      expect(row["user"]["name"]).to eq(sleep.user.name)
+      expect(json_response[0]).to match(
+        "id"          => sleep.id,
+        "length"      => sleep.length,
+        "in_progress" => sleep.in_progress?,
+        "start_at"    => sleep.start_at.utc.as_json,
+        "end_at"      => sleep.end_at.utc.as_json,
+        "user"        => {
+                           "id" => sleep.user.id,
+                           "name" => sleep.user.name
+                         }
+      )
+      
     end
 
     describe "records order" do
-      let!(:long_sleep) { FactoryBot.create(:sleep, user: friend1, start_at: 1.day.ago, end_at: Time.zone.now) }
-      let!(:short_sleep) { FactoryBot.create(:sleep, user: friend2, start_at: 1.second.ago, end_at: Time.zone.now) }
+      let!(:long_sleep) { FactoryBot.create(:sleep, user: following, start_at: 6.days.ago, end_at: 5.days.ago) }
+      let!(:short_sleep) { FactoryBot.create(:sleep, user: following, start_at: Time.now - 1, end_at: Time.now) }
 
-      it "by length ASC" do
+      it "by length DESC" do
         get "/v1/users/#{user.id}/sleeps/by_friends"
 
         expect(response).to have_http_status(:success)
 
         json_response = JSON.parse(response.body)
-        expect(json_response.first["id"]).to eq(short_sleep.id)
-        expect(json_response.last["id"]).to eq(long_sleep.id)
+        expect(json_response.first["id"]).to eq(long_sleep.id)
+        expect(json_response.last["id"]).to eq(short_sleep.id)
       end
     end
   end

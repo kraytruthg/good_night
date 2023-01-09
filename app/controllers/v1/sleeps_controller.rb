@@ -8,7 +8,7 @@ module V1
 
     def by_friends
       user = User.find_by(id: params[:user_id])
-      @sleeps = Sleep.where(user: user.followings).sort_by(&:length)
+      @sleeps = Sleep.where(user: @current_user.following_relationships.select(:following_id), start_at: 7.days.ago..Time.now).order(length: :desc)
     end
   end
 end
