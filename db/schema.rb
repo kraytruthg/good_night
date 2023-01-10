@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_08_170218) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_10_010200) do
   create_table "follows", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "follower_id"
     t.bigint "following_id"
@@ -27,7 +27,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_08_170218) do
     t.virtual "length", type: :integer, as: "timestampdiff(SECOND,`start_at`,`end_at`)"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "start_at"], name: "index_sleeps_on_user_id_and_start_at"
+    t.index ["user_id", "start_at", "length"], name: "index_sleeps_on_user_id_and_start_at_and_length"
   end
 
   create_table "users", charset: "utf8mb4", force: :cascade do |t|

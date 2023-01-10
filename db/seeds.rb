@@ -8,9 +8,9 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 follower = User.find_by(name: "follower")
-(1..200).each do |i|
+(1..50000).each do |i|
   user = User.create(name: "user#{i}")
-  Follow.create(follower: follower, following_id: user.id)
+  Follow.create(follower: follower, following_id: user.id) if rand(3) == 0
 
   (1..10).each do |days|
     user.sleeps.create(
