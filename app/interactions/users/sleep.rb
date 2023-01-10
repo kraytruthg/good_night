@@ -5,7 +5,7 @@ require "active_interaction"
 module Users
   class Sleep < ActiveInteraction::Base
     object :user
-    time :slept_at, default: Time.zone.now
+    time :slept_at, default: Time.now
 
     validate :validate_uesr
 

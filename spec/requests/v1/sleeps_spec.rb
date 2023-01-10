@@ -5,10 +5,10 @@ require "rails_helper"
 RSpec.describe V1::SleepsController do
   context "GET /users/:user_id/sleeps" do
     let(:user) { FactoryBot.create(:user) }
-
+    
     it "returns user's sleep records" do
-       FactoryBot.create(:sleep, user: user) 
-       FactoryBot.create(:sleep) 
+      FactoryBot.create(:sleep, user: user) 
+      FactoryBot.create(:sleep)
 
       get "/v1/users/#{user.id}/sleeps"
 
@@ -18,7 +18,7 @@ RSpec.describe V1::SleepsController do
       expect(json_response.size).to eq(user.sleeps.count)
     end
 
-    it "returns records in order" do
+    it "returns records ordered by created_at desc" do
       old_sleep = FactoryBot.create(:sleep, user: user)
       latest_sleep = FactoryBot.create(:sleep, user: user, start_at: Time.now + 1)
 
@@ -43,6 +43,8 @@ RSpec.describe V1::SleepsController do
           "in_progress" => sleep.in_progress?,
           "start_at"    => sleep.start_at.utc.as_json,
           "end_at"      => sleep.end_at.utc.as_json,
+          "created_at"  => sleep.created_at.utc.as_json,
+          "updated_at"  => sleep.updated_at.utc.as_json
         })
       end
     end
@@ -60,7 +62,9 @@ RSpec.describe V1::SleepsController do
           "length"      => sleep.length,
           "in_progress" => sleep.in_progress?,
           "start_at"    => sleep.start_at.utc.as_json,
-          "end_at"      => nil
+          "end_at"      => nil,
+          "created_at"  => sleep.created_at.utc.as_json,
+          "updated_at"  => sleep.updated_at.utc.as_json
         })
       end
     end
@@ -104,6 +108,8 @@ RSpec.describe V1::SleepsController do
         "in_progress" => sleep.in_progress?,
         "start_at"    => sleep.start_at.utc.as_json,
         "end_at"      => sleep.end_at.utc.as_json,
+        "created_at"  => sleep.created_at.utc.as_json,
+        "updated_at"  => sleep.updated_at.utc.as_json,
         "user"        => {
                            "id" => sleep.user.id,
                            "name" => sleep.user.name
