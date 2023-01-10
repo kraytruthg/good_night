@@ -8,16 +8,10 @@ module V1
         following_id: params[:following_id]
       )
       head(:created)
-    rescue ActiveRecord::RecordInvalid => e
-      if e.record.errors.all? { _1.type == :taken }
-        head(:created)
-      else
-        super
-      end
     end
 
     def destroy
-      follow = Follow.find_by(id: params[:id])
+      follow = @current_user.following_relationships.find(params[:id])
       follow&.destroy
 
       head(:ok)

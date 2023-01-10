@@ -45,13 +45,13 @@ RSpec.describe V1::FollowsController do
       it "returns created without actually creating a record" do
         post "/v1/users/#{user.id}/follows", params: { following_id: following.id }
 
-        expect(response).to have_http_status(:created)
+        expect(response).to have_http_status(422)
       end
     end
   end
 
   context "DELETE /users/:user_id/follows/:id" do
-    let(:follow) { FactoryBot.create(:follow, follower: user, following: following) }
+    let!(:follow) { FactoryBot.create(:follow, follower: user, following: following) }
 
     it "returns ok" do
       delete "/v1/users/#{user.id}/follows/#{follow.id}"
@@ -62,10 +62,10 @@ RSpec.describe V1::FollowsController do
     context "when follow not exist" do
       let(:not_existed_follow_id) { 0 }
 
-      it "still returns ok" do
+      it "still returns not_found" do
         delete "/v1/users/#{user.id}/follows/#{not_existed_follow_id}"
 
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
